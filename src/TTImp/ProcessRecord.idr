@@ -99,7 +99,7 @@ elabRecord {vars} eopts fc env nest newns vis mbtot tn_in params conName_in fiel
 
     farg : IField ->
            (FC, Maybe Name, RigCount, PiInfo RawImp, RawImp)
-    farg (MkIField fc c p n ty) = (virtualiseFC fc, Just n, c, p, ty)
+    farg (MkIField fc c p n ty) = (virtualiseFC fc, Just n, c, p, IBindHere fc (PI erased) ty)
 
     mkTy : List (FC, Maybe Name, RigCount, PiInfo RawImp, RawImp) ->
            RawImp -> RawImp
