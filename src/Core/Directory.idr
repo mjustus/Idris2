@@ -11,6 +11,7 @@ import Idris.Version
 
 import Parser.Unlit
 
+import Libraries.Data.SortedSet
 import Libraries.Data.Version
 import Libraries.Utils.Path
 
@@ -67,7 +68,8 @@ export
 extraSearchDirectories : {auto c : Ref Ctxt Defs} -> Core (List String)
 extraSearchDirectories =
   do d <- getDirs
-     pure (map (</> show ttcVersion) (extra_dirs d ++ package_dirs d))
+     pure (map (</> show ttcVersion)
+          (SortedSet.toList (extra_dirs d) ++ SortedSet.toList (package_dirs d)))
 
 ------------------------------------------------------------------------
 
@@ -175,8 +177,8 @@ findLibraryFile fname
             | Nothing => throw (InternalError ("Can't find library " ++ fname))
          pure f
     where
-      libDirs : List String -> List String
-      libDirs = map (\x => x </> "lib")
+      libDirs : SortedSet String -> List String
+      libDirs = map (\x => x </> "lib") . SortedSet.toList
 
 -- Given a namespace, return the full path to the checked module,
 -- looking first in the build directory then in the extra_dirs

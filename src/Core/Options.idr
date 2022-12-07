@@ -5,6 +5,7 @@ import Core.Name
 import public Core.Options.Log
 import Core.TT
 
+import Libraries.Data.SortedSet
 import Libraries.Utils.Path
 import Idris.Syntax.Pragmas
 
@@ -23,8 +24,8 @@ record Dirs where
   depends_dir : String -- local dependencies directory, relative to working directory
   output_dir : Maybe String -- output directory, relative to working directory
   prefix_dir : String -- installation prefix, for finding data files (e.g. run time support)
-  extra_dirs : List String -- places to look for import files
-  package_dirs : List String -- places to look for packages
+  extra_dirs : SortedSet String -- places to look for import files
+  package_dirs : SortedSet String -- places to look for packages
   lib_dirs : List String -- places to look for libraries (for code generation)
   data_dirs : List String -- places to look for data file
 
@@ -210,7 +211,7 @@ getCG o cg = lookup (toLower cg) (availableCGs o)
 
 defaultDirs : Dirs
 defaultDirs = MkDirs "." Nothing "build" "depends" Nothing
-                     "/usr/local" ["."] [] [] []
+                     "/usr/local" (singleton ".") empty [] []
 
 defaultPPrint : PPrinter
 defaultPPrint = MkPPOpts False False True False

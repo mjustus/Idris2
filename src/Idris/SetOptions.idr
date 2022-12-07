@@ -9,6 +9,7 @@ import Core.Options
 import Core.Unify
 import Libraries.Utils.Path
 import Libraries.Data.List.Extra
+import Libraries.Data.SortedSet
 
 import Idris.CommandLine
 import Idris.Package.Types
@@ -96,7 +97,7 @@ findPkgDirs p bounds = do
   globFiles <- coreLift $ candidateDirs globaldir p bounds
   -- Look in all the package paths too
   d <- getDirs
-  pkgFiles <- coreLift $ traverse (\d => candidateDirs d p bounds) (package_dirs d)
+  pkgFiles <- coreLift $ traverse (\d => candidateDirs d p bounds) (SortedSet.toList (package_dirs d))
 
   -- If there's anything locally, use that and ignore the global ones
   let allFiles = if isNil locFiles
@@ -147,7 +148,7 @@ findPackages
          globalPkgs <- coreLift $ visiblePackages !pkgGlobalDirectory
          -- additional packages in directories specified
          d <- getDirs
-         additionalPkgs <- coreLift $ traverse (\d => visiblePackages d) (package_dirs d)
+         additionalPkgs <- coreLift $ traverse (\d => visiblePackages d) (SortedSet.toList (package_dirs d))
          -- local packages
          localPkgs <- coreLift $ visiblePackages !pkgLocalDirectory
          pure $ globalPkgs ++ join additionalPkgs ++ localPkgs
