@@ -627,7 +627,13 @@ mutual
                         throw (InvalidArgs fc env (map (const (UN $ Basic "<auto>")) autoargs ++ map fst namedargs) tm)
   -- Function type is delayed, so force the term and continue
   checkAppWith' rig elabinfo nest env fc tm (NDelayed dfc r ty@(NBind _ _ (Pi _ _ _ _) sc)) argdata expargs autoargs namedargs kr expty
-      = checkAppWith' rig elabinfo nest env fc (TForce dfc r tm) ty argdata expargs autoargs namedargs kr expty
+      = case onLHS (elabMode elabinfo) of
+             True =>
+               do (tm, gfty) <- checkAppWith' rig elabinfo nest env fc tm ty argdata expargs autoargs namedargs kr expty
+                  fty <- getTerm gfty
+                  pure (tm, gnf env (TDelayed dfc r fty))
+             False =>
+               checkAppWith' rig elabinfo nest env fc (TForce dfc r tm) ty argdata expargs autoargs namedargs kr expty
   -- If there's no more arguments given, and the plicities of the type and
   -- the expected type line up, stop
   checkAppWith' rig elabinfo nest env fc tm ty@(NBind tfc x (Pi _ rigb Implicit aty) sc)
