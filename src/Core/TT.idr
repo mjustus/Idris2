@@ -1914,7 +1914,7 @@ covering
             " => " ++ show sc
       showApp (App _ _ _) [] = "[can't happen]"
       showApp (As _ _ n tm) [] = show n ++ "@" ++ show tm
-      showApp (TDelayed _ _ tm) [] = "%Delayed " ++ show tm
+      showApp (TDelayed _ _ tm) [] = "%Delayed " ++ "(" ++ show tm ++ ")"
       showApp (TDelay _ _ _ tm) [] = "%Delay " ++ show tm
       showApp (TForce _ _ tm) [] = "%Force " ++ show tm
       showApp (PrimVal _ c) [] = show c
