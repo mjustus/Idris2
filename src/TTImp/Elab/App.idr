@@ -628,15 +628,14 @@ mutual
   -- Function type is delayed:
   --   RHS: force the term
   --   LHS: strip off delay but only for explicit functions and disallow any further patterns
-  checkAppWith' rig elabinfo nest env fc tm (NDelayed dfc r ty@(NBind _ _ (Pi _ _ Explicit _) sc)) argdata [] [] [] kr expty
+  checkAppWith' rig elabinfo nest env fc tm (NDelayed dfc r ty@(NBind _ _ (Pi _ _ i _) sc)) argdata expargs autoargs namedargs kr expty
       = if onLHS (elabMode elabinfo)
-           then do (tm, gfty) <- checkAppWith' rig elabinfo nest env fc tm ty argdata [] [] [] kr expty
+           then do when (isImplicit i) $ throw (LazyImplicitFunction fc)
+                   let ([], [], []) = (expargs, autoargs, namedargs)
+                       | _ => throw (LazyPatternVar fc)
+                   (tm, gfty) <- checkAppWith' rig elabinfo nest env fc tm ty argdata expargs autoargs namedargs kr expty
                    fty <- getTerm gfty
                    pure (tm, gnf env (TDelayed dfc r fty))
-           else checkAppWith' rig elabinfo nest env fc (TForce dfc r tm) ty argdata [] [] [] kr expty
-  checkAppWith' rig elabinfo nest env fc tm (NDelayed dfc r ty@(NBind _ _ (Pi _ _ _ _) sc)) argdata expargs autoargs namedargs kr expty
-      = if onLHS (elabMode elabinfo)
-           then throw (NotFunctionType fc env tm)
            else checkAppWith' rig elabinfo nest env fc (TForce dfc r tm) ty argdata expargs autoargs namedargs kr expty
   -- If there's no more arguments given, and the plicities of the type and
   -- the expected type line up, stop
