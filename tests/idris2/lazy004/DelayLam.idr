@@ -5,7 +5,7 @@ f1 = \x => x
 f2 : Lazy (Unit -> Unit)
 f2 = Delay (\x => x)
 
--- can't define lazy functions by paTtern matching
+-- can't define lazy functions by pattern matching
 failing "Defining lazy functions via pattern matching is not yet supported."
   f3 : Unit -> Lazy (Unit -> Unit)
   f3 x y = y
