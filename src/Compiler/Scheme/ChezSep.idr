@@ -50,7 +50,7 @@ schHeader libs compilationUnits = fromString """
 schFooter : Builder
 schFooter = """
 
-  (collect 4)
+  (collect-rendezvous)
   (blodwen-run-finalisers)
   """
 

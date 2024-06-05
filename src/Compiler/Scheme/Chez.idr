@@ -111,7 +111,7 @@ schHeader chez libs whole
 schFooter : Bool -> Bool -> Builder
 schFooter prof whole = fromString """
 
-    (collect 4)
+    (collect-rendezvous)
     (blodwen-run-finalisers)
     \{ ifThenElse prof "(profile-dump-html)" "" }
     \{ ifThenElse whole ")" "" }
