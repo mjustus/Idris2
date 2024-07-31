@@ -418,7 +418,7 @@ elabInterface {vars} ifc def_vis env nest constraints iname params dets mcon bod
              traverse_ (processDecl [] nest env) fns
              traverse_ (\n => do mn <- inCurrentNS n
                                  setFlag vfc mn Inline
-                                 setFlag vfc mn TCInline
+                                 setFlag vfc mn Sugar
                                  setFlag vfc mn Overloadable) meth_names
 
     -- Check that a default definition is correct. We just discard it here once
@@ -526,4 +526,4 @@ elabInterface {vars} ifc def_vis env nest constraints iname params dets mcon bod
              log "elab.interface" 5 $ "Constraint hints from " ++ show constraints ++ ": " ++ show chints
              traverse_ (processDecl [] nest env) (concatMap snd chints)
              traverse_ (\n => do mn <- inCurrentNS n
-                                 setFlag vfc mn TCInline) (map fst chints)
+                                 setFlag vfc mn Sugar) (map fst chints)

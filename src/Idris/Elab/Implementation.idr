@@ -275,7 +275,7 @@ elabImplementation {vars} ifc vis opts_in pass env nest is cons iname ps named i
                traverse_ (processDecl [] nest' env) [impFn]
                unsetFlag vfc impName BlockedHint
 
-               setFlag vfc impName TCInline
+               setFlag vfc impName Sugar
                -- it's the methods we're interested in, not the implementation
                setFlag vfc impName (SetTotal PartialOK)
 
@@ -294,7 +294,7 @@ elabImplementation {vars} ifc vis opts_in pass env nest is cons iname ps named i
 
                -- inline flag has done its job, and outside the interface
                -- it can hurt, so unset it now
-               unsetFlag vfc impName TCInline
+               unsetFlag vfc impName Sugar
 
                -- Reset the open hints (remove the named implementation)
                setOpenHints hs
