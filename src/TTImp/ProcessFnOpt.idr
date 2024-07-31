@@ -36,6 +36,8 @@ processFnOpt fc _ ndef NoInline
          setFlag fc ndef NoInline
 processFnOpt fc _ ndef Deprecate
     =  setFlag fc ndef Deprecate
+processFnOpt fc _ ndef Sugar
+    = setFlag fc ndef Sugar
 processFnOpt fc _ ndef TCInline
     = setFlag fc ndef TCInline
 processFnOpt fc True ndef (Hint d)

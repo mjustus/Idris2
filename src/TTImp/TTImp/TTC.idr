@@ -340,6 +340,7 @@ mutual
     toBuf b (Totality PartialOK) = tag 8
     toBuf b Macro = tag 9
     toBuf b (SpecArgs ns) = do tag 10; toBuf b ns
+    toBuf b Sugar = tag 16
     toBuf b TCInline = tag 11
     toBuf b NoInline = tag 12
     toBuf b Unsafe = tag 13
@@ -364,6 +365,7 @@ mutual
                13 => pure Unsafe
                14 => pure Deprecate
                15 => do cs <- fromBuf b; pure (ForeignExport cs)
+               16 => pure Sugar
                _ => corrupt "FnOpt"
 
   export

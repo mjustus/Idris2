@@ -1147,6 +1147,9 @@ mutual
     <|> do decoratedPragma fname "deprecate"
            commit
            pure $ IFnOpt Deprecate
+    <|> do decoratedPragma fname "sugar"
+           commit
+           pure $ IFnOpt Sugar
     <|> do decoratedPragma fname "tcinline"
            commit
            pure $ IFnOpt TCInline

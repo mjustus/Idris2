@@ -1044,6 +1044,7 @@ TTC DefFlag where
   toBuf b Deprecate = tag 15
   toBuf b Invertible = tag 3
   toBuf b Overloadable = tag 4
+  toBuf b Sugar = tag 16
   toBuf b TCInline = tag 5
   toBuf b (SetTotal x) = do tag 6; toBuf b x
   toBuf b BlockedHint = tag 7
@@ -1068,6 +1069,7 @@ TTC DefFlag where
              12 => do x <- fromBuf b; pure (Identity x)
              13 => pure NoInline
              15 => pure Deprecate
+             16 => pure Sugar
              _ => corrupt "DefFlag"
 
 export

@@ -104,6 +104,7 @@ mutual
        Inline : FnOpt
        NoInline : FnOpt
        Deprecate : FnOpt
+       Sugar : FnOpt
        TCInline : FnOpt
        -- Flag means the hint is a direct hint, not a function which might
        -- find the result (e.g. chasing parent interface dictionaries)
@@ -394,6 +395,7 @@ parameters {auto eqTTImp : Eq TTImp}
     Inline == Inline = True
     NoInline == NoInline = True
     Deprecate == Deprecate = True
+    Sugar == Sugar = True
     TCInline == TCInline = True
     Hint b == Hint b' = b == b'
     GlobalHint b == GlobalHint b' = b == b'
@@ -781,6 +783,7 @@ parameters (f : TTImp -> TTImp)
   mapFnOpt Inline = Inline
   mapFnOpt NoInline = NoInline
   mapFnOpt Deprecate = Deprecate
+  mapFnOpt Sugar = Sugar
   mapFnOpt TCInline = TCInline
   mapFnOpt (Hint b) = Hint b
   mapFnOpt (GlobalHint b) = GlobalHint b
@@ -902,6 +905,7 @@ parameters {0 m : Type -> Type} {auto apl : Applicative m} (f : (original : TTIm
   mapMFnOpt Inline = pure Inline
   mapMFnOpt NoInline = pure NoInline
   mapMFnOpt Deprecate = pure Deprecate
+  mapMFnOpt Sugar = pure Sugar
   mapMFnOpt TCInline = pure TCInline
   mapMFnOpt (Hint b) = pure (Hint b)
   mapMFnOpt (GlobalHint b) = pure (GlobalHint b)

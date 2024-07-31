@@ -116,6 +116,7 @@ mutual
     map f Inline = Inline
     map f NoInline = NoInline
     map f Deprecate = Deprecate
+    map f Sugar = Sugar
     map f TCInline = TCInline
     map f (Hint b) = Hint b
     map f (GlobalHint b) = GlobalHint b

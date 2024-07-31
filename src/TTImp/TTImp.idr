@@ -234,6 +234,7 @@ mutual
        NoInline : FnOpt' nm
        ||| Mark a function as deprecated.
        Deprecate : FnOpt' nm
+       Sugar : FnOpt' nm
        TCInline : FnOpt' nm
        -- Flag means the hint is a direct hint, not a function which might
        -- find the result (e.g. chasing parent interface dictionaries)
@@ -264,6 +265,7 @@ mutual
     show Inline = "%inline"
     show NoInline = "%noinline"
     show Deprecate = "%deprecate"
+    show Sugar = "%sugar"
     show TCInline = "%tcinline"
     show (Hint t) = "%hint " ++ show t
     show (GlobalHint t) = "%globalhint " ++ show t
@@ -282,6 +284,7 @@ mutual
     Inline == Inline = True
     NoInline == NoInline = True
     Deprecate == Deprecate = True
+    Sugar == Sugar = True
     TCInline == TCInline = True
     (Hint x) == (Hint y) = x == y
     (GlobalHint x) == (GlobalHint y) = x == y

@@ -204,7 +204,8 @@ data DefFlag
       Deprecate
     | Invertible -- assume safe to cancel arguments in unification
     | Overloadable -- allow ad-hoc overloads
-    | TCInline -- always inline before totality checking
+    | Sugar -- always inline
+    | TCInline -- inline before totality checking unless under delay
          -- (in practice, this means it's reduced in 'normaliseHoles')
          -- This means the function gets inlined when calculating the size
          -- change graph, but otherwise not. It's only safe if the function
@@ -238,6 +239,7 @@ Eq DefFlag where
     (==) Deprecate Deprecate = True
     (==) Invertible Invertible = True
     (==) Overloadable Overloadable = True
+    (==) Sugar Sugar = True
     (==) TCInline TCInline = True
     (==) (SetTotal x) (SetTotal y) = x == y
     (==) BlockedHint BlockedHint = True
@@ -255,6 +257,7 @@ Show DefFlag where
   show Deprecate = "deprecate"
   show Invertible = "invertible"
   show Overloadable = "overloadable"
+  show Sugar = "sugar"
   show TCInline = "tcinline"
   show (SetTotal x) = show x
   show BlockedHint = "blockedhint"
