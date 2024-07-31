@@ -208,7 +208,7 @@ mutual
       = do argQ <- quoteGenNF q opts defs bound env arg
            pure (TDelayed fc r argQ)
   quoteGenNF q opts defs bound env (NDelay fc r ty arg)
-      = do argNF <- evalClosure defs (toHolesOnly arg)
+      = do argNF <- evalClosure defs (delayClosure (toHolesOnly arg))
            argQ <- quoteGenNF q opts defs bound env argNF
            tyNF <- evalClosure defs (toHolesOnly ty)
            tyQ <- quoteGenNF q opts defs bound env tyNF
