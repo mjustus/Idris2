@@ -41,7 +41,7 @@ const : a -> b -> a
 const x = \value => x
 
 ||| Function composition.
-public export %inline %tcinline
+public export %inline %sugar
 (.) : (b -> c) -> (a -> b) -> a -> c
 (.) f g = \x => f (g x)
 
