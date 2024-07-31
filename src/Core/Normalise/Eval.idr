@@ -504,10 +504,10 @@ parameters (defs : Defs, topopts : EvalOpts)
        --   + It's a metavariable and we're not in 'argHolesOnly'
        --   + It's inlinable and we're in 'tcInline'
         = if alwaysReduce r
-             || (not (holesOnly opts || argHolesOnly opts || tcInline opts))
+             || (not (holesOnly opts || argHolesOnly opts || tcInline opts || (delay opts && not (elem Sugar flags))))
              || (meta && not (isErased rigd))
              || (meta && holesOnly opts)
-             || (tcInline opts && elem TCInline flags)
+             || (tcInline opts && (elem Sugar flags || not (delay opts) && elem TCInline flags))
              then case argsFromStack args stk of
                        Nothing => do logC "eval.def.underapplied" 50 $ do
                                        def <- toFullNames def

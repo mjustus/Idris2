@@ -22,22 +22,23 @@ record EvalOpts where
   reduceLimit : List (Name, Nat) -- reduction limits for given names. If not
                      -- present, no limit
   strategy : EvalOrder
+  delay : Bool
 
 export
 defaultOpts : EvalOpts
-defaultOpts = MkEvalOpts False False True False False Nothing [] CBN
+defaultOpts = MkEvalOpts False False True False False Nothing [] CBN False
 
 export
 withHoles : EvalOpts
-withHoles = MkEvalOpts True True False False False Nothing [] CBN
+withHoles = MkEvalOpts True True False False False Nothing [] CBN False
 
 export
 withAll : EvalOpts
-withAll = MkEvalOpts False False True True False Nothing [] CBN
+withAll = MkEvalOpts False False True True False Nothing [] CBN False
 
 export
 withArgHoles : EvalOpts
-withArgHoles = MkEvalOpts False True False False False Nothing [] CBN
+withArgHoles = MkEvalOpts False True False False False Nothing [] CBN False
 
 export
 tcOnly : EvalOpts
@@ -105,6 +106,12 @@ mutual
 %name Closure cl
 %name NHead hd
 %name NF nf
+
+export
+delayClosure : Closure vs -> Closure vs
+delayClosure (MkClosure opts locs env tm)
+    = MkClosure ({ delay := True } opts) locs env tm
+delayClosure c = c
 
 export
 ntCon : FC -> Name -> Int -> Nat -> List (FC, Closure vars) -> NF vars
