@@ -13,6 +13,7 @@ import Core.TT.Var
 
 import Data.List
 import Data.SnocList
+import Data.String
 
 import Libraries.Data.List.SizeOf
 import Libraries.Data.SnocList.SizeOf
@@ -569,7 +570,7 @@ covering
       showApp (TType _ u) [] = "Type"
       showApp _ [] = "???"
       showApp f args = "(" ++ assert_total (show f) ++ " " ++
-                        assert_total (showSep " " (map show args))
+                        assert_total (joinBy " " (map show args))
                      ++ ")"
 
 ||| Obtain the telescope of names and their types

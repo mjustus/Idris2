@@ -99,7 +99,7 @@ addData vars vis tidx (MkData (MkCon dfc tyn arity tycon) datacons)
          let paramPositions = fromMaybe allPos !(paramPos (Resolved tidx) (map type datacons))
          log "declare.data.parameters" 20 $
             "Positions of parameters for datatype" ++ show tyn ++
-            ": [" ++ showSep ", " (map show paramPositions) ++ "]"
+            ": [" ++ joinBy ", " (map show paramPositions) ++ "]"
          let tydef = newDef dfc tyn top vars tycon (specified vis)
                             (TCon tag arity
                                   paramPositions

@@ -182,7 +182,7 @@ mutual
          = "(%caselocal (" ++ show uname ++ " " ++ show iname
                ++ " " ++ show args ++ ") " ++ show sc ++ ")"
       show (IUpdate _ flds rec)
-         = "(%record " ++ showSep ", " (map show flds) ++ " " ++ show rec ++ ")"
+         = "(%record " ++ joinBy ", " (map show flds) ++ " " ++ show rec ++ ")"
       show (IApp fc f a)
          = "(" ++ show f ++ " " ++ show a ++ ")"
       show (INamedApp fc f n a)
@@ -194,7 +194,7 @@ mutual
       show (ISearch fc d)
          = "%search"
       show (IAlternative fc ty alts)
-         = "(|" ++ showSep "," (map show alts) ++ "|)"
+         = "(|" ++ joinBy "," (map show alts) ++ "|)"
       show (IRewrite _ rule tm)
          = "(%rewrite (" ++ show rule ++ ") (" ++ show tm ++ "))"
       show (ICoerced _ tm) = "(%coerced " ++ show tm ++ ")"
@@ -223,8 +223,8 @@ mutual
   export
   covering
   Show nm => Show (IFieldUpdate' nm) where
-    show (ISetField p val) = showSep "->" p ++ " = " ++ show val
-    show (ISetFieldApp p val) = showSep "->" p ++ " $= " ++ show val
+    show (ISetField p val) = joinBy "->" p ++ " = " ++ show val
+    show (ISetFieldApp p val) = joinBy "->" p ++ " $= " ++ show val
 
   public export
   FnOpt : Type
@@ -280,14 +280,14 @@ mutual
     show (Hint t) = "%hint " ++ show t
     show (GlobalHint t) = "%globalhint " ++ show t
     show ExternFn = "%extern"
-    show (ForeignFn cs) = "%foreign " ++ showSep " " (map show cs)
-    show (ForeignExport cs) = "%export " ++ showSep " " (map show cs)
+    show (ForeignFn cs) = "%foreign " ++ joinBy " " (map show cs)
+    show (ForeignExport cs) = "%export " ++ joinBy " " (map show cs)
     show Invertible = "%invertible"
     show (Totality Total) = "total"
     show (Totality CoveringOnly) = "covering"
     show (Totality PartialOK) = "partial"
     show Macro = "%macro"
-    show (SpecArgs ns) = "%spec " ++ showSep " " (map show ns)
+    show (SpecArgs ns) = "%spec " ++ joinBy " " (map show ns)
 
   export
   Eq FnOpt where
@@ -416,7 +416,7 @@ mutual
     show (MkImpRecord _ n params opts con fields)
         = "record " ++ show n ++ " " ++ show params ++
           " " ++ show con ++ "\n\t" ++
-          showSep "\n\t" (map show fields) ++ "\n"
+          joinBy "\n\t" (map show fields) ++ "\n"
 
   public export
   data WithFlag
@@ -510,14 +510,14 @@ mutual
     show (IDef _ n cs) = "(%def " ++ show n ++ " " ++ show cs ++ ")"
     show (IParameters _ ps ds)
         = "parameters " ++ show ps ++ "\n\t" ++
-          showSep "\n\t" (assert_total $ map show ds)
+          joinBy "\n\t" (assert_total $ map show ds)
     show (IRecord _ _ _ _ d) = show d
     show (IFail _ msg decls)
         = "fail" ++ maybe "" ((" " ++) . show) msg ++ "\n" ++
-          showSep "\n" (assert_total $ map (("  " ++) . show) decls)
+          joinBy "\n" (assert_total $ map (("  " ++) . show) decls)
     show (INamespace _ ns decls)
         = "namespace " ++ show ns ++
-          showSep "\n" (assert_total $ map show decls)
+          joinBy "\n" (assert_total $ map show decls)
     show (ITransform _ n lhs rhs)
         = "%transform " ++ show n ++ " " ++ show lhs ++ " ==> " ++ show rhs
     show (IRunElabDecl _ tm)

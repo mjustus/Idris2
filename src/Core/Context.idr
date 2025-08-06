@@ -26,6 +26,7 @@ import Data.List
 import Data.List1
 import Data.Maybe
 import Data.Nat
+import Data.String
 import Libraries.Data.NameMap
 import Libraries.Data.StringMap
 import Libraries.Data.UserNameMap
@@ -1815,7 +1816,7 @@ setDetermining fc tyn args
              else getPos (1 + i) ns sc
     getPos _ [] _ = pure []
     getPos _ ns ty = throw (GenericMsg fc ("Unknown determining arguments: "
-                           ++ showSep ", " (map show ns)))
+                           ++ joinBy ", " (map show ns)))
 
 export
 setDetags : {auto c : Ref Ctxt Defs} ->

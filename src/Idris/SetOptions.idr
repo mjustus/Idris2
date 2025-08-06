@@ -382,7 +382,7 @@ setIncrementalCG failOnError cgn
               if failOnError
                  then do coreLift $ putStrLn "No such code generator"
                          coreLift $ putStrLn $ "Code generators available: " ++
-                                         showSep ", " (map fst (availableCGs (options defs)))
+                                         joinBy ", " (map fst (availableCGs (options defs)))
                          coreLift $ exitWith (ExitFailure 1)
                  else pure ()
 
@@ -428,7 +428,7 @@ preOptions (SetCG e :: opts)
             Nothing =>
               do coreLift $ putStrLn "No such code generator"
                  coreLift $ putStrLn $ "Code generators available: " ++
-                                 showSep ", " (map fst (availableCGs (options defs)))
+                                 joinBy ", " (map fst (availableCGs (options defs)))
                  coreLift $ exitWith (ExitFailure 1)
 preOptions (Directive d :: opts)
     = do setSession ({ directives $= (d::) } !getSession)

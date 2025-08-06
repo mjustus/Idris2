@@ -31,8 +31,8 @@ initNoMangle backends valid = do
             let Just (backend, expName) = lookupBackend backends exps
                 | Nothing => throw (GenericMsg EmptyFC """
                     No valid %export specifier for \{show name}
-                      Supported backends: \{showSep ", " backends}
-                      Given backends: \{showSep ", " (fst <$> exps)}
+                      Supported backends: \{joinBy ", " backends}
+                      Given backends: \{joinBy ", " (fst <$> exps)}
                     """)
             let True = valid expName
                 | False => throw (GenericMsg EmptyFC "\"\{expName}\" is not a valid name on \{backend} backend")
