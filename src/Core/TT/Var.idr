@@ -60,6 +60,7 @@ finIdx (Later l) = FS (finIdx l)
 
 ||| Recover the value pointed at by an IsVar proof
 ||| O(n) in the size of the index
+-- TODO make return type a Singleton
 export
 nameAt : {vars : SnocList a} -> {idx : Nat} -> (0 p : IsVar n idx vars) -> a
 nameAt {vars = _ :< n} First = n

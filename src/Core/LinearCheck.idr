@@ -507,7 +507,7 @@ mutual
                       RigCount ->
                       Env Term vars -> Usage (vars ++ done) ->
                       List (Term (vars ++ done)) ->
-                      Term (vars ++ done) -> Core ()
+                      Term (vars <>< done) -> Core ()
       checkEnvUsage s rig [<] usage args tm = pure ()
       checkEnvUsage s rig {done} {vars = xs :< nm} (env :< b) usage args tm
           = do let pos = mkVar s
@@ -629,7 +629,7 @@ mutual
                Name -> Int -> Def -> List (Term vars) ->
                Core (Term vars, Glued vars, Usage vars)
   expandMeta rig erase env n idx (PMDef _ [<] (STerm _ fn) _ _) args
-      = do tm <- substMeta (embed fn) args zero (Subst.empty {tm = Term})
+      = do tm <- substMeta (embed fn) args zero SubstEnv.empty
            lcheck rig erase env tm
     where
       substMeta : {drop, vs : _} ->
@@ -637,7 +637,7 @@ mutual
                   SizeOf drop -> SubstEnv drop vs ->
                   Core (Term vs)
       substMeta (Bind bfc n (Lam _ c e ty) sc) (a :: as) drop env
-          = substMeta sc as (suc drop) (Subst.bind {tm = Term} env a)
+          = substMeta sc as (suc drop) (SubstEnv.bind env a)
       substMeta (Bind bfc n (Let _ c val ty) sc) as drop env
           = substMeta (subst val sc) as drop env
       substMeta rhs [] drop env = pure (substs drop env rhs)

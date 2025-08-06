@@ -301,7 +301,7 @@ record GlobalDef where
   location : FC
   fullname : Name -- original unresolved name
   type : ClosedTerm
-  eraseArgs : List Nat -- which argument positions to erase at runtime
+  eraseArgs : List Nat -- which argument positions to erase at runtime, integers are de Bruijn levels
   safeErase : List Nat -- which argument positions are safe to assume
                        -- erasable without 'dotting', because their types
                        -- are collapsible relative to non-erased arguments

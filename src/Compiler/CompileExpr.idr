@@ -47,26 +47,17 @@ numArgs defs (Ref _ _ n)
            _ => pure (Arity 0)
 numArgs _ tm = pure (Arity 0)
 
-||| Compute the thinning getting rid of the listed de Bruijn indices.
+||| Compute the thinning getting rid of the listed de Bruijn levels.
 -- TODO: is the list of erased arguments guaranteed to be sorted?
 -- Should it?
-mkSub : (ns : Scope) -> List Nat -> (ns' ** Thin ns' ns)
-mkSub ns = mkSub' (length ns) ns
-    where
-        mkSub' : Nat -> (ns : Scope) -> List Nat -> (ns' ** Thin ns' ns)
-        mkSub' i _ [] = (_ ** Refl)
-        mkSub' i [<] ns = (_ ** Refl)
-        mkSub' (S i) (xs :< x) es
-            = let (ns' ** p) = mkSub' i xs es in
-                  if i `elem` es
-                     then (ns' ** Drop p)
-                     else (ns' :< x ** Keep p)
-        -- Next case can't happen if called with the right Nat from mkDropSubst
-        -- FIXME: rule it out with a type!
-        mkSub' Z (xs :< x) es = let (vs ** th) = mkSub' Z xs es in (vs ** Drop th)
-
-weakenVar : Var ns -> Var (ns :< a)
-weakenVar (MkVar p) = (MkVar (Later p))
+mkSub : Nat -> (ns : Scope) -> List Nat -> (ns' ** Thin ns' ns)
+mkSub i _ [] = (_ ** Refl)
+mkSub i [] ns = (_ ** Refl)
+mkSub i (x :: xs) es
+    = let (ns' ** p) = mkSub (S i) xs es in
+          if i `elem` es
+             then (ns' ** Drop p)
+             else (x :: ns' ** Keep p)
 
 etaExpand : {vars : _} ->
             Int -> Nat -> CExp vars -> List (Var vars) -> CExp vars
@@ -84,7 +75,7 @@ etaExpand i Z exp args = mkApp exp (map (mkLocal (getFC exp)) (reverse args))
 etaExpand i (S k) exp args
     = CLam (getFC exp) (MN "eta" i)
              (etaExpand (i + 1) k (weaken exp)
-                  (MkVar First :: map weakenVar args))
+                  (MkVar First :: map later args))
 
 export
 expandToArity : {vars : _} ->
@@ -153,7 +144,7 @@ mkDropSubst : (erasedArgs : List Nat) ->
   (args : List Name) ->
   (args' ** Thin (Scope.ext vars args') (Scope.ext vars args))
 mkDropSubst es args
-  = let (vs ** th) = mkSub (cast args) es in
+  = let (vs ** th) = mkSub args es in
     MkDPair (cast vs)
   $ rewrite sym $ snocAppendAsFish vars vs in
     rewrite fishAsSnocAppend vars args in
@@ -601,7 +592,7 @@ toCDef n ty _ (ExternDef arity)
         -- TODO has quadratic runtime
         getVars : ArgList k ns -> List (Var ns)
         getVars Z = []
-        getVars (S rest) = MkVar First :: map weakenVar (getVars rest)
+        getVars (S rest) = MkVar First :: map later (getVars rest)
 
 toCDef n ty _ (ForeignDef arity cs)
     = do defs <- get Ctxt
@@ -614,7 +605,7 @@ toCDef n ty _ (Builtin {arity} op)
         -- TODO has quadratic runtime
         getVars : ArgList k ns -> Vect k (Var ns)
         getVars Z = []
-        getVars (S rest) = MkVar First :: map weakenVar (getVars rest)
+        getVars (S rest) = MkVar First :: map later (getVars rest)
 
 toCDef n _ _ (DCon tag arity pos)
     = do let nt = snd <$> pos
